@@ -8,6 +8,12 @@ d3.json(url).then(data => {
 
 // Initialize the page with a default plot
 function init() {
+    // Make list of names for dropdown menu
+    let dropdownSamples = d3.select("#selDataset");
+    jData.names.forEach(sample => {
+        dropdownSamples.append("option").text(sample).property("value", sample);
+    });
+
     // Create empty list to store data
     let sampleValues = [];
   
@@ -28,29 +34,19 @@ d3.selectAll("#selDataset").on("change", updatePlotly);
 
 // Create function to be called when dropdown menu item is selected
 function updatePlotly() {
-  // Use D3 to select the dropdown menu
-  let dropdownMenu = d3.select("#selDataset");
-  // Assign the value of the dropdown menu option to a variable
-  let dataset = dropdownMenu.property("value");
+  // Get sample selected in dropdown
+  let selectedSample = d3.select("#selDataset").property("value");
 
   // Locate the desired dataset
-  let selectedData = jData.samples.find(data => data.id === dataset);
+  let selectedData = jData.samples.find(data => data.id === selectedSample);
 
-  // Create empty list to store data
-  let sampleValues = [];
-
-  // Fill list of values to plot 
-  for (let i=0; i<selectedData.samples.length; i++) {
-    let sampleValue = selectedData.samples[i].sample_values;
-    let otuIDs = selectedData.samples[i].otu_ids.slice(0,10).map(id => `OTU ${id}`);
+  // Fill list of values to plot
+  let sampleValue = selectedData.sample_values.slice(0,10);
+  let otuIDs = selectedData.otu_ids.slice(0,10).map(id => `OTU ${id}`);
     
-    sampleValues.push({
-        type: 'bar',
-        orientation: 'h',
-          x: sampleValue.slice(0,10),
-          y: otuIDs,
-    });
-    }
-
-    Plotly.newPlot("plot", sampleValues);
+  // Update the plot with the new data
+  Plotly.update("plot", {
+    x: [sampleValue],
+    y: [otuIDs],
+  });
 }
