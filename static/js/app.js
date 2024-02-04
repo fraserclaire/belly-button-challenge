@@ -18,7 +18,7 @@ function init() {
     let sampleValues = [];
   
     // Fill list of values to plot 
-      let sampleValue = jData.samples[0].sample_values;
+      let sampleValue = jData.samples[0].sample_values.slice(0,10).sort((a,b) => a-b);
       let otuIDs = jData.samples[0].otu_ids.slice(0,10).map(id => `OTU ${id}`);
       
       sampleValues.push({
@@ -41,7 +41,7 @@ function updatePlotly() {
   let selectedData = jData.samples.find(data => data.id === selectedSample);
 
   // Fill list of values to plot
-  let sampleValue = selectedData.sample_values.slice(0,10);
+  let sampleValue = selectedData.sample_values.slice(0,10).sort((a,b) => a-b);
   let otuIDs = selectedData.otu_ids.slice(0,10).map(id => `OTU ${id}`);
     
   // Update the plot with the new data
