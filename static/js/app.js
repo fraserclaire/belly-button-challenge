@@ -104,9 +104,9 @@ function updatePlotly() {
   });
 
   Plotly.update("bubble", {
-    x: otuID,
-    y: sampleValueAll,
-    text: otuLabel,
+    x: [otuID],
+    y: [sampleValueAll],
+    text: [otuLabel],
     marker: {
         size: sampleValueAll,
         color: otuID,
@@ -117,7 +117,7 @@ function updatePlotly() {
 });
 
   // Get selected sample metadata
-let selectedMetaData = jData.metadata.find(data => data.id === selectedSample);
+  let selectedMetaData = jData.metadata.find(data => data.id === selectedSample);
 
   // List the metadata on the sample-metadata table
   document.getElementById("sample-metadata").innerHTML = 
