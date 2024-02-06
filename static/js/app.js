@@ -16,19 +16,46 @@ function init() {
 
     // Create empty list to store data
     let sampleValues = [];
+    let bubbleValues = [];
   
     // Fill list of values to plot 
-      let sampleValue = jData.samples[0].sample_values.slice(0,10).sort((a,b) => a-b);
-      let otuIDs = jData.samples[0].otu_ids.slice(0,10).map(id => `OTU ${id}`);
-      
-      sampleValues.push({
-        type: 'bar',
-        orientation: 'h',
-          x: sampleValue.slice(0,10),
-          y: otuIDs,
-      });
-      Plotly.newPlot("plot", sampleValues);
+    let sampleValue = jData.samples[0].sample_values.slice(0,10).sort((a,b) => a-b);
+    let sampleValueAll = jData.samples[0].sample_values;
+    let otuIDs = jData.samples[0].otu_ids.slice(0,10).map(id => `OTU ${id}`);
+    let otuID = jData.samples[0].otu_ids.map(id => id);
+    let otuLabels = jData.samples[0].otu_labels.slice(0,10);
+    let otuLabel = jData.samples[0].otu_labels;
+
+    // Store hover text values
+    let hoverText = otuLabels.map(label => `${label}`);
+    
+    sampleValues.push({
+      type: 'bar',
+      orientation: 'h',
+      x: sampleValue.slice(0,10),
+      y: otuIDs,
+      text: hoverText,
+    });
+    Plotly.newPlot("bar", sampleValues);
+
+    // Create bubble chart
+    bubbleValues.push({
+      type: 'scatter',
+      mode: 'markers',
+      x: otuID,
+      y: sampleValueAll,
+      text: otuLabel,
+      marker: {
+          size: sampleValueAll,
+          color: otuID,
+          colorscale: 'Viridis',
+          opacity: 0.7,
+          symbol: 'circle'
+      },
+    });
+    Plotly.newPlot("bubble", bubbleValues);
 }
+
 // Call updatePlotly() when a change takes place to the DOM
 d3.selectAll("#selDataset").on("change", updatePlotly);
 
@@ -42,11 +69,34 @@ function updatePlotly() {
 
   // Fill list of values to plot
   let sampleValue = selectedData.sample_values.slice(0,10).sort((a,b) => a-b);
+  let sampleValueAll = jData.samples[0].sample_values;
   let otuIDs = selectedData.otu_ids.slice(0,10).map(id => `OTU ${id}`);
+  let otuID = selectedData.otu_ids.map(id => id);
+  let otuLabels = selectedData.otu_labels.slice(0,10);
+  let otuLabel = jData.samples[0].otu_labels;
+
+  // Store hover text values
+  let hoverText = otuLabels.map(label => label);
     
   // Update the plot with the new data
-  Plotly.update("plot", {
+  Plotly.update("bar", {
     x: [sampleValue],
     y: [otuIDs],
+    text: [hoverText],
   });
+
+  Plotly.update("bubble", {
+    x: otuID,
+    y: sampleValueAll,
+    text: otuLabel,
+    marker: {
+        size: sampleValueAll,
+        color: otuID,
+        colorscale: 'Viridis',
+        opacity: 0.7,
+        symbol: 'circle'
+  },
+});
 }
+
+
