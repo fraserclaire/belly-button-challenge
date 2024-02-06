@@ -53,7 +53,25 @@ function init() {
           symbol: 'circle'
       },
     });
-    Plotly.newPlot("bubble", bubbleValues);
+
+    let layout = {
+      xaxis: {
+        title: 'OTU ID'
+      }
+    };
+    Plotly.newPlot("bubble", bubbleValues, layout);
+
+    // List the metadata on the sample-metadata table
+    document.getElementById("sample-metadata").innerHTML = 
+    `<p>id: ${jData.metadata[0].id}</p>
+    <p>ethnicity: ${jData.metadata[0].ethnicity}</p>
+    <p>gender: ${jData.metadata[0].gender}</p>
+    <p>age: ${jData.metadata[0].age}</p>
+    <p>location: ${jData.metadata[0].location}</p>
+    <p>bbtype: ${jData.metadata[0].bbtype}</p>
+    <p>wfreq: ${jData.metadata[0].wfreq}
+    `;
+  
 }
 
 // Call updatePlotly() when a change takes place to the DOM
@@ -97,6 +115,21 @@ function updatePlotly() {
         symbol: 'circle'
   },
 });
+
+  // Get selected sample metadata
+let selectedMetaData = jData.metadata.find(data => data.id === selectedSample);
+
+  // List the metadata on the sample-metadata table
+  document.getElementById("sample-metadata").innerHTML = 
+  `<p>id: ${selectedMetaData.id}</p>
+  <p>ethnicity: ${selectedMetaData.ethnicity}</p>
+  <p>gender: ${selectedMetaData.gender}</p>
+  <p>age: ${selectedMetaData.age}</p>
+  <p>location: ${selectedMetaData.location}</p>
+  <p>bbtype: ${selectedMetaData.bbtype}</p>
+  <p>wfreq: ${selectedMetaData.wfreq}
+  `;
+  
+
 }
-
-
+ 
